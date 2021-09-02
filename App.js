@@ -21,6 +21,7 @@ import {
   flagsUsed
 } from './src/functions'
 import Header from './src/components/Header';
+import LevelSelection from './src/screens/LevelSelection';
 
 export default class App extends Component {
 
@@ -43,7 +44,8 @@ export default class App extends Component {
     return  {
       board: createMinedBoard(rows, cols, this.minesAmount()),
       won: false,
-      lost: false
+      lost: false,
+      showLevalSelection: false
     }
   }
 
@@ -77,11 +79,23 @@ export default class App extends Component {
     this.setState({board, won})
   }
 
+  onLevelSelected = level => {
+    params.difficultLevel = level
+    this.setState(this.createState())
+  }
+
   render() {
     return (
       <SafeAreaView style={styles.container}>
-        <Header flagsLeft={this.minesAmount() - flagsUsed(this.state.board)}
-        onNewGame={() => this.setState(this.createState())}
+        <LevelSelection 
+          isVisible={this.state.showLevalSelection }
+          onLevelSelected={this.onLevelSelected} 
+          onCancel={() => this.setState({showLevalSelection: false})}
+        />
+        <Header 
+          flagsLeft={this.minesAmount() - flagsUsed(this.state.board)}
+          onNewGame={() => this.setState(this.createState())}
+          onFlagPress={() => this.setState({showLevalSelection: true})}
         />
         
         <View style={styles.board}>
